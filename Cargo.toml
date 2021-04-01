@@ -1,0 +1,11 @@
+[package]
+name = "turbot"
+version = "0.1.0"
+authors = ["Pierre Berthe <42767265+MrTsunami4@users.noreply.github.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
+serenity = { version = "0.10.4", default-features = false, features = ["client", "gateway", "rustls_backend", "model"] }
