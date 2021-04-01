@@ -16,7 +16,7 @@ impl EventHandler for Handler {
     // Event handlers are dispatched through a threadpool, and so multiple
     // events can be dispatched simultaneously.
     async fn message(&self, ctx: Context, msg: Message) {
-        if msg.content == "/ping" {
+        if msg.content == "!ping" {
             // Sending a message can fail, due to a network error, an
             // authentication error, or lack of permissions to post in the
             // channel, so log to stdout when some error happens, with a
@@ -41,8 +41,7 @@ impl EventHandler for Handler {
 #[tokio::main]
 async fn main() {
     // Configure the client with your Discord bot token in the environment.
-    let key = ODI3MTUzNjk0NTk1NDgxNjUw.YGW46A.gcsdcSgecIcrUStnqzJ4fSXg74k;
-    let token = env::var(key)
+    let token = env::var("token")
         .expect("Expected a token in the environment");
 
     // Create a new instance of the Client, logging in as a bot. This will
