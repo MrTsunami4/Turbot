@@ -401,22 +401,26 @@ async fn fibo(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
     let mut f1: BigInt = One::one();
     let conter: i32 = args.current().unwrap().parse().unwrap();
 
-    for _ in 0..conter {
-        let f2 = f0 + &f1;
-        f0 = replace(&mut f1, f2);
-    }
+    if conter < 3000001 {
+        for _ in 0..conter {
+            let f2 = f0 + &f1;
+            f0 = replace(&mut f1, f2);
+        }
 
-    let result = f0.to_string();
+        let result = f0.to_string();
 
-    if conter > 9000 {
-        fs::write("fibo.txt", result).unwrap();
+        if conter > 9000 && conter < 5000000 {
+            fs::write("fibo.txt", result).unwrap();
 
-        let files = vec!["fibo.txt"];
-        msg.channel_id
-            .send_files(&ctx.http, files, |m| m.content("response"))
-            .await?;
+            let files = vec!["fibo.txt"];
+            msg.channel_id
+                .send_files(&ctx.http, files, |m| m.content("response"))
+                .await?;
+        } else {
+            msg.channel_id.say(&ctx.http, result).await?;
+        }
     } else {
-        msg.channel_id.say(&ctx.http, result).await?;
+        msg.channel_id.say(&ctx.http, "petit rigolo").await?;
     }
 
     Ok(())
