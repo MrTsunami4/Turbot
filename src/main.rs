@@ -31,6 +31,7 @@ use std::{
     collections::{HashMap, HashSet},
     env,
     fmt::Write,
+    fs,
     mem::replace,
     sync::Arc,
 };
@@ -405,8 +406,18 @@ async fn fibo(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
         f0 = replace(&mut f1, f2);
     }
 
-    let f0 = f0.to_string();
-    msg.channel_id.say(&ctx.http, f0).await?;
+    let result = f0.to_string();
+
+    if conter > 9000 {
+        fs::write("fibo.txt", result).unwrap();
+
+        let files = vec!["fibo.txt"];
+        msg.channel_id
+            .send_files(&ctx.http, files, |m| m.content("response"))
+            .await?;
+    } else {
+        msg.channel_id.say(&ctx.http, result).await?;
+    }
 
     Ok(())
 }
