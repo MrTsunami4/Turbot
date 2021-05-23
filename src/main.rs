@@ -75,7 +75,8 @@ impl EventHandler for Handler {
     latency,
     some_long_command,
     upper_command,
-    fibo
+    fibo,
+    tocha
 )]
 struct General;
 
@@ -409,8 +410,8 @@ async fn fibo(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
 
         let result = f0.to_string();
 
-        if conter > 9000 && conter < 5000000 {
-            fs::write("fibo.txt", result).unwrap();
+        if conter > 9000 {
+            fs::write("fibo.txt", result)?;
 
             let files = vec!["fibo.txt"];
             msg.channel_id
@@ -422,6 +423,15 @@ async fn fibo(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
     } else {
         msg.channel_id.say(&ctx.http, "petit rigolo").await?;
     }
+
+    Ok(())
+}
+
+#[command]
+async fn tocha(ctx: &Context, msg: &Message, mut args: Args) -> CommandResult {
+    let src = args.current().unwrap();
+    args.advance();
+    let dest = args.current().unwrap();
 
     Ok(())
 }
@@ -554,8 +564,11 @@ async fn latency(ctx: &Context, msg: &Message) -> CommandResult {
         }
     };
 
-    msg.reply(ctx, &format!("The shard latency is {:?}", runner.latency))
-        .await?;
+    msg.reply(
+        ctx,
+        &format!("The shard latency is {:?}", runner.latency.unwrap()),
+    )
+    .await?;
 
     Ok(())
 }
