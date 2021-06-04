@@ -76,7 +76,7 @@ impl EventHandler for Handler {
     some_long_command,
     upper_command,
     fibo,
-    tocha
+    spam
 )]
 struct General;
 
@@ -397,10 +397,10 @@ async fn say(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
 }
 
 #[command]
-async fn fibo(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
+async fn fibo(ctx: &Context, msg: &Message, mut args: Args) -> CommandResult {
     let mut f0: BigInt = Zero::zero();
     let mut f1: BigInt = One::one();
-    let conter: i32 = args.current().unwrap().parse().unwrap();
+    let conter = args.single::<i32>()?;
 
     if conter < 3000001 {
         for _ in 0..conter {
@@ -428,10 +428,13 @@ async fn fibo(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
 }
 
 #[command]
-async fn tocha(ctx: &Context, msg: &Message, mut args: Args) -> CommandResult {
-    let src = args.current().unwrap();
-    args.advance();
-    let dest = args.current().unwrap();
+async fn spam(ctx: &Context, msg: &Message, mut args: Args) -> CommandResult {
+    let conter = args.single::<i32>()?;
+    let spam = args.single::<String>()?;
+    //let spam = "<:rust:810846700834783243>";
+    for _ in 0..conter {
+        msg.channel_id.say(&ctx.http, spam.clone()).await?;
+    }
 
     Ok(())
 }
